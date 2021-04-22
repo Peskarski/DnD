@@ -5,5 +5,8 @@ export const CircleFigure = styled.div`
   height: 100px;
   background-color: green;
   border-radius: 50%;
-  margin: 8px auto;
+  margin: 0 auto 8px auto;
+  position: ${props => props.absolute && 'absolute'};
+  left: ${props => `${props.left}px`};
+  top: ${props => `${props.top}px`};
 `

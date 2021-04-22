@@ -1,9 +1,8 @@
-import { SquareFigure } from './styles'
+import { SquareFigure } from './styles';
+import DnD from '../../HOC/DnD/DnD';
 
-const Square = () => {
-  return (
-    <SquareFigure />
-  )
-}
+const Square = () => (
+  DnD(SquareFigure)
+)
 
 export default Square;

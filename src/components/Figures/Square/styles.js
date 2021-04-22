@@ -5,4 +5,7 @@ export const SquareFigure = styled.div`
   height: 100px;
   background-color: blue;
   margin: 8px auto;
+  position: ${props => props.absolute && 'absolute'};
+  left: ${props => `${props.left}px`};
+  top: ${props => `${props.top}px`};
 `
