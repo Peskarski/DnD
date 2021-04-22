@@ -1,10 +1,14 @@
 import { CircleFigure } from './styles';
 import DnD from '../../HOC/DnD/DnD';
 
-const Circle = () => (
-  DnD(CircleFigure)
-)
+const Circle = ({ onMouseDown }) => {
 
+  return (
+    <div onMouseDown={onMouseDown}>
+      {DnD(CircleFigure)}
+    </div>
+  )
+}
 
 export default Circle;
 

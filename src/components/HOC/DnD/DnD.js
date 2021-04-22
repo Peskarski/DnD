@@ -16,15 +16,15 @@ const DnD = (Figure) => {
     setLeft(e.clientX);
     setTop(e.clientY);
     setToMove(true);
+    console.log('dnd');
   }
 
   const handleMouseUp = () => {
-    console.log('up');
     setToMove(false);
   }
 
   const handleMouseMove = (e) => {
-    if(toMove) {
+    if (toMove) {
       setLeft(e.pageX);
       setTop(e.pageY);
     }
@@ -33,7 +33,7 @@ const DnD = (Figure) => {
   return (
     <Figure onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove} left={left - shiftLeft}
-      top={top - shiftTop} absolute={positionAbs} />
+      top={top - shiftTop} absolute={positionAbs} data-positionabs={positionAbs}/>
   )
 }
 
