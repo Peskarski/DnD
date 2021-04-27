@@ -1,12 +1,12 @@
 import { CircleFigure } from './styles';
 import DnD from '../../HOC/DnD/DnD';
 
-const Circle = ({ onMouseDown }) => {
+const Circle = ({ onMouseDown, clickedItem, id }) => {
 
   return (
-    <div onMouseDown={onMouseDown}>
-      {DnD(CircleFigure)}
-    </div>
+    <DnD>
+      <CircleFigure onMouseDown={onMouseDown} clickedItem={clickedItem} id={id} />
+    </DnD>
   )
 }
 

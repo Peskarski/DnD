@@ -6,7 +6,7 @@ export const CircleFigure = styled.div`
   background-color: green;
   border-radius: 50%;
   margin: 0 auto 8px auto;
-  position: ${props => props.absolute && 'absolute'};
-  left: ${props => `${props.left}px`};
-  top: ${props => `${props.top}px`};
+  position: relative;
+  border: ${props => props.clickedItem === props.id ? '2px solid black' : ''};
+  z-index: ${props => props.clickedItem === props.id ? '99999999' : '0'};
 `

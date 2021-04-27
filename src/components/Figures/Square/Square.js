@@ -1,11 +1,11 @@
 import { SquareFigure } from './styles';
 import DnD from '../../HOC/DnD/DnD';
 
-const Square = ({ onMouseDown }) => {
+const Square = ({ onMouseDown , clickedItem, id }) => {
   return (
-    <div onMouseDown={onMouseDown}>
-      {DnD(SquareFigure)}
-    </div>
+    <DnD>
+      <SquareFigure onMouseDown={onMouseDown} clickedItem={clickedItem} id={id}/>
+    </DnD>
   )
 }
 

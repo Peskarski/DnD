@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { DnDStyled } from './styles';
+import React from 'react';
 
-const DnD = (Figure) => {
+const DnD = ({ children }) => {
   const [toMove, setToMove] = useState(false);
   const [left, setLeft] = useState(0);
   const [top, setTop] = useState(0);
@@ -16,7 +18,6 @@ const DnD = (Figure) => {
     setLeft(e.clientX);
     setTop(e.clientY);
     setToMove(true);
-    console.log('dnd');
   }
 
   const handleMouseUp = () => {
@@ -30,11 +31,25 @@ const DnD = (Figure) => {
     }
   }
 
+
+  // const childrenWithProps = React.Children.map(children, child => {
+  //   return (
+  //     React.cloneElement(child, {
+  //       id,
+  //     }
+  //     )
+  //   )
+  // })
+
   return (
-    <Figure onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}
+    <DnDStyled onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove} left={left - shiftLeft}
-      top={top - shiftTop} absolute={positionAbs} data-positionabs={positionAbs}/>
+      top={top - shiftTop} absolute={positionAbs} data-positionabs={positionAbs}>
+      {children}
+    </DnDStyled>
   )
 }
+
+
 
 export default DnD;
