@@ -1,7 +1,7 @@
 import Circle from '../Cirlce/Circle';
 import Square from '../Square/Square';
 import { Main } from './styles';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 const FiguresMain = ({ canvasPosition }) => {
   const [circlesArr, addCircle] = useState([{
@@ -28,12 +28,29 @@ const FiguresMain = ({ canvasPosition }) => {
     }
   }
 
-  const { canvasRight, canvasTop, canvasLeft, canvasBottom } = canvasPosition;
+  console.log('rendered');
 
   const deleteFigure = (id, type) => {
     const filteredArray = figureTypes[type].take.filter(element => element.id !== id);
     figureTypes[type].set(filteredArray);
+    setClickedItem(null);
   }
+
+  const handleDeleteKey = (e) => {
+    if (e.code === 'Delete' && clickedItem) {
+      deleteFigure(clickedItem, 'circle');
+      deleteFigure(clickedItem, 'square');
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleDeleteKey);
+    return () => {
+      document.removeEventListener('keydown', handleDeleteKey);
+    };
+  }, [handleDeleteKey]);
+
+  const { canvasRight, canvasTop, canvasLeft, canvasBottom } = canvasPosition;
 
   const onCircleMouseDown = (e) => {
     if (e.target.parentElement.dataset.positionabs === 'false') {
