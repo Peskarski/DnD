@@ -1,39 +1,90 @@
 import Circle from '../Cirlce/Circle';
 import Square from '../Square/Square';
 import { Main } from './styles';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-const FiguresMain = () => {
-  const [circlesArr, addCircle] = useState([Circle]);
-  const [squaresArr, addSquare] = useState([Square]);
+const FiguresMain = ({ canvasPosition }) => {
+  const [circlesArr, addCircle] = useState([{
+    figure: Circle,
+    id: '0circle',
+  }]);
+
+  const [squaresArr, addSquare] = useState([{
+    figure: Square,
+    id: '0square',
+  }]);
+
   const [clickedItem, setClickedItem] = useState(null);
+
+  const figureTypes = {
+    circle: {
+      take: circlesArr,
+      set: addCircle
+    },
+
+    square: {
+      take: squaresArr,
+      set: addSquare
+    }
+  }
+
+  const { canvasRight, canvasTop, canvasLeft, canvasBottom } = canvasPosition;
+
+  const deleteFigure = (id, type) => {
+    const filteredArray = figureTypes[type].take.filter(element => element.id !== id);
+    figureTypes[type].set(filteredArray);
+  }
 
   const onCircleMouseDown = (e) => {
     if (e.target.parentElement.dataset.positionabs === 'false') {
-      addCircle(prev => [...prev, Circle]);
+      addCircle(prev => [...prev, {
+        figure: Circle,
+        id: `${Math.random()}circle`
+      }]);
     } else {
       setClickedItem(e.target.id);
     }
   }
 
+  const onCirlceMouseUp = (e) => {
+    const { x, y, width, height } = e.target.getBoundingClientRect();
+    if (e.target.parentElement.dataset.positionabs === 'true' &&
+      (x < canvasLeft || y < canvasTop ||
+        (x + width) > canvasRight || (y + height) > canvasBottom)) {
+      deleteFigure(e.target.id, 'circle');
+    }
+  }
+
   const onSquareMouseDown = (e) => {
     if (e.target.parentElement.dataset.positionabs === 'false') {
-      addSquare(prev => [...prev, Square]);
+      addSquare(prev => [...prev, {
+        figure: Square,
+        id: `${Math.random()}square`
+      }]);
     } else {
       setClickedItem(e.target.id);
+    }
+  }
+
+  const onSquareMouseUp = (e) => {
+    const { x, y, width, height } = e.target.getBoundingClientRect();
+    if (e.target.parentElement.dataset.positionabs === 'true' &&
+      (x < canvasLeft || y < canvasTop ||
+        (x + width) > canvasRight || (y + height) > canvasBottom)) {
+      deleteFigure(e.target.id, 'square');
     }
   }
 
   return (
     <Main>
       <h2>Figures</h2>
-      {circlesArr.map((Element, index) => (
-        <Element key={index} onMouseDown={onCircleMouseDown} clickedItem={clickedItem}
-          id={index + 'circle'} />)
+      {circlesArr.map(element => (
+        <element.figure key={element.id} onMouseDown={onCircleMouseDown} clickedItem={clickedItem}
+          onMouseUp={onCirlceMouseUp} id={element.id} />)
       )}
-      {squaresArr.map((Element, index) => (
-        <Element key={index} onMouseDown={onSquareMouseDown} clickedItem={clickedItem}
-          id={index + 'square'} />)
+      {squaresArr.map(element => (
+        <element.figure key={element.id} onMouseDown={onSquareMouseDown} clickedItem={clickedItem}
+          onMouseUp={onSquareMouseUp} id={element.id} />)
       )}
     </Main>
   )
