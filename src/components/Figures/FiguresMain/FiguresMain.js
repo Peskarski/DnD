@@ -28,12 +28,29 @@ const FiguresMain = ({ canvasPosition }) => {
     }
   }
 
-  console.log('rendered');
-
   const deleteFigure = (id, type) => {
     const filteredArray = figureTypes[type].take.filter(element => element.id !== id);
     figureTypes[type].set(filteredArray);
     setClickedItem(null);
+  }
+
+  const addFigure = (e, type, figure) => {
+    if (e.target.parentElement.dataset.positionabs === 'false') {
+      figureTypes[type].set(prev => [...prev, {
+        figure,
+        id: `${Math.random()}${type}`,
+      }]);
+    } else {
+      setClickedItem(e.target.id);
+    }
+  }
+
+  const isFigureOutside = (e) => {
+    const { canvasRight, canvasTop, canvasLeft, canvasBottom } = canvasPosition;
+    const { x, y, width, height } = e.target.getBoundingClientRect();
+    return (e.target.parentElement.dataset.positionabs === 'true' &&
+      (x < canvasLeft || y < canvasTop ||
+        (x + width) > canvasRight || (y + height) > canvasBottom))
   }
 
   const handleDeleteKey = (e) => {
@@ -50,44 +67,22 @@ const FiguresMain = ({ canvasPosition }) => {
     };
   }, [handleDeleteKey]);
 
-  const { canvasRight, canvasTop, canvasLeft, canvasBottom } = canvasPosition;
-
   const onCircleMouseDown = (e) => {
-    if (e.target.parentElement.dataset.positionabs === 'false') {
-      addCircle(prev => [...prev, {
-        figure: Circle,
-        id: `${Math.random()}circle`
-      }]);
-    } else {
-      setClickedItem(e.target.id);
-    }
+    addFigure(e, 'circle', Circle);
   }
 
   const onCirlceMouseUp = (e) => {
-    const { x, y, width, height } = e.target.getBoundingClientRect();
-    if (e.target.parentElement.dataset.positionabs === 'true' &&
-      (x < canvasLeft || y < canvasTop ||
-        (x + width) > canvasRight || (y + height) > canvasBottom)) {
+    if (isFigureOutside(e)) {
       deleteFigure(e.target.id, 'circle');
     }
   }
 
   const onSquareMouseDown = (e) => {
-    if (e.target.parentElement.dataset.positionabs === 'false') {
-      addSquare(prev => [...prev, {
-        figure: Square,
-        id: `${Math.random()}square`
-      }]);
-    } else {
-      setClickedItem(e.target.id);
-    }
+    addFigure(e, 'square', Square);
   }
 
   const onSquareMouseUp = (e) => {
-    const { x, y, width, height } = e.target.getBoundingClientRect();
-    if (e.target.parentElement.dataset.positionabs === 'true' &&
-      (x < canvasLeft || y < canvasTop ||
-        (x + width) > canvasRight || (y + height) > canvasBottom)) {
+    if (isFigureOutside(e)) {
       deleteFigure(e.target.id, 'square');
     }
   }
