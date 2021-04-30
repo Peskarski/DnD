@@ -29,8 +29,9 @@ const FiguresMain = ({ canvasPosition }) => {
   }, [circlesArr, squaresArr, clickedItem]);
 
   const getDataFromLS = () => {
-    if (JSON.parse(localStorage.getItem('data'))) {
-      const { circlesArr, squaresArr, clickedItem } = JSON.parse(localStorage.getItem('data'));
+    const data = JSON.parse(localStorage.getItem('data'));
+    if (data) {
+      const { circlesArr, squaresArr, clickedItem } = data;
       const circlesArrWithFigures = circlesArr.map(element => {
         const { id, left, top, absolute } = element;
         return {
