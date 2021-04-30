@@ -6,4 +6,5 @@ export const Application = styled.section`
   display: flex;
   flex-direction: row;
   margin: 8px auto;
+  -webkit-user-select: none;
 `

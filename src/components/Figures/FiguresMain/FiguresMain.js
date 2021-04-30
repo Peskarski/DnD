@@ -20,38 +20,38 @@ const FiguresMain = ({ canvasPosition }) => {
     }
   }
 
-  const setDataToLS = () => {
-    console.log('set');
+  const setDataToLS = useCallback(() => {
     localStorage.setItem('data', JSON.stringify({
       circlesArr: circlesArr,
       squaresArr: squaresArr,
       clickedItem: clickedItem,
     }));
-  }
+  }, [circlesArr, squaresArr, clickedItem]);
 
   const getDataFromLS = () => {
-    console.log('get');
     if (JSON.parse(localStorage.getItem('data'))) {
       const { circlesArr, squaresArr, clickedItem } = JSON.parse(localStorage.getItem('data'));
-      const circlesArrWithFigures = circlesArr.map(element => (
-        {
+      const circlesArrWithFigures = circlesArr.map(element => {
+        const { id, left, top, absolute } = element;
+        return {
           figure: Circle,
-          id: element.id,
-          left: element.left,
-          top: element.top,
-          absolute: element.absolute
+          id,
+          left,
+          top,
+          absolute
         }
-      ));
+      });
 
-      const squaresArrWithFigures = squaresArr.map(element => (
-        {
+      const squaresArrWithFigures = squaresArr.map(element => {
+        const { id, left, top, absolute } = element;
+        return {
           figure: Square,
-          id: element.id,
-          left: element.left,
-          top: element.top,
-          absolute: element.absolute
+          id,
+          left,
+          top,
+          absolute
         }
-      ));
+      });
 
       addCircle(circlesArrWithFigures);
       addSquare(squaresArrWithFigures);
@@ -104,7 +104,7 @@ const FiguresMain = ({ canvasPosition }) => {
         (x + width) > canvasRight || (y + height) > canvasBottom))
   }
 
-  const setCordinates = (e, type) => {
+  const setCoordinates = (e, type) => {
     figureTypes[type].set(figureTypes[type].take.map(element => {
       if (element.id === e.target.id) {
         const { x, y } = e.target.getBoundingClientRect();
@@ -118,7 +118,7 @@ const FiguresMain = ({ canvasPosition }) => {
       } else {
         return element;
       }
-    }))
+    }));
   }
 
   const handleDeleteKey = useCallback((e) => {
@@ -134,7 +134,7 @@ const FiguresMain = ({ canvasPosition }) => {
 
   useEffect(() => {
     setDataToLS();
-  }, [circlesArr, squaresArr, clickedItem])
+  }, [circlesArr, squaresArr, clickedItem, setDataToLS])
 
 
   useEffect(() => {
@@ -152,7 +152,7 @@ const FiguresMain = ({ canvasPosition }) => {
     if (isFigureOutside(e)) {
       deleteFigure(e.target.id, 'circle');
     } else {
-      setCordinates(e, 'circle');
+      setCoordinates(e, 'circle');
     }
   }
 
@@ -164,7 +164,7 @@ const FiguresMain = ({ canvasPosition }) => {
     if (isFigureOutside(e)) {
       deleteFigure(e.target.id, 'square');
     } else {
-      setCordinates(e, 'square');
+      setCoordinates(e, 'square');
     }
   }
 

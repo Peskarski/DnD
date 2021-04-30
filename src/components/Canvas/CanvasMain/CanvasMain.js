@@ -6,7 +6,6 @@ const CanvasMain = ({ setPositionOnCanvas }) => {
 
   useEffect(() => {
     const { x, y, width, height } = canvasRef.current.getBoundingClientRect();
-    console.log(canvasRef.current.getBoundingClientRect());
     setPositionOnCanvas({
       canvasLeft: x,
       canvasTop: y,
