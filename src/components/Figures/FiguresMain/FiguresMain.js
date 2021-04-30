@@ -22,9 +22,9 @@ const FiguresMain = ({ canvasPosition }) => {
 
   const setDataToLS = useCallback(() => {
     localStorage.setItem('data', JSON.stringify({
-      circlesArr: circlesArr,
-      squaresArr: squaresArr,
-      clickedItem: clickedItem,
+      circlesArr,
+      squaresArr,
+      clickedItem,
     }));
   }, [circlesArr, squaresArr, clickedItem]);
 

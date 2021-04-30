@@ -34,7 +34,7 @@ const DnD = ({ children, topLS, leftLS, absoluteLS }) => {
   return (
     <DnDStyled onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove} left={left - shiftLeft} top={top - shiftTop}
-      absolute={positionAbs} data-positionabs={positionAbs} absoluteLS={absoluteLS} >
+      absolute={positionAbs} data-positionabs={ absoluteLS || positionAbs} absoluteLS={absoluteLS} >
       {children}
     </DnDStyled>
   )
