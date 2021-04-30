@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 
-export const CircleFigure = styled.div`
+export const CircleFigure = styled.div.attrs(props =>({
+  style: {
+    top: props.top  + 'px',
+    left: props.left + 'px',
+  }
+}))`
   width : 100px;
   height: 100px;
   background-color: green;

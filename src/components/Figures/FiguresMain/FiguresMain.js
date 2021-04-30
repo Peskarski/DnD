@@ -4,16 +4,8 @@ import { Main } from './styles';
 import React, { useState, useEffect, useCallback } from 'react';
 
 const FiguresMain = ({ canvasPosition }) => {
-  const [circlesArr, addCircle] = useState([{
-    figure: Circle,
-    id: '0circle',
-  }]);
-
-  const [squaresArr, addSquare] = useState([{
-    figure: Square,
-    id: '0square',
-  }]);
-
+  const [circlesArr, addCircle] = useState([]);
+  const [squaresArr, addSquare] = useState([]);
   const [clickedItem, setClickedItem] = useState(null);
 
   const figureTypes = {
@@ -28,21 +20,80 @@ const FiguresMain = ({ canvasPosition }) => {
     }
   }
 
-  const deleteFigure = (id, type) => {
+  const setDataToLS = () => {
+    console.log('set');
+    localStorage.setItem('data', JSON.stringify({
+      circlesArr: circlesArr,
+      squaresArr: squaresArr,
+      clickedItem: clickedItem,
+    }));
+  }
+
+  const getDataFromLS = () => {
+    console.log('get');
+    if (JSON.parse(localStorage.getItem('data'))) {
+      const { circlesArr, squaresArr, clickedItem } = JSON.parse(localStorage.getItem('data'));
+      const circlesArrWithFigures = circlesArr.map(element => (
+        {
+          figure: Circle,
+          id: element.id,
+          left: element.left,
+          top: element.top,
+          absolute: element.absolute
+        }
+      ));
+
+      const squaresArrWithFigures = squaresArr.map(element => (
+        {
+          figure: Square,
+          id: element.id,
+          left: element.left,
+          top: element.top,
+          absolute: element.absolute
+        }
+      ));
+
+      addCircle(circlesArrWithFigures);
+      addSquare(squaresArrWithFigures);
+      setClickedItem(clickedItem);
+    } else {
+      addCircle([{
+        figure: Circle,
+        id: '0circle',
+        left: 0,
+        top: 0,
+        absolute: false
+      }]);
+      addSquare([{
+        figure: Square,
+        id: '0square',
+        left: 0,
+        top: 0,
+        absolute: false
+      }]);
+      setClickedItem(null);
+    }
+  }
+
+  const deleteFigure = useCallback((id, type) => {
     const filteredArray = figureTypes[type].take.filter(element => element.id !== id);
     figureTypes[type].set(filteredArray);
     setClickedItem(null);
-  }
+  }, [figureTypes]);
 
   const addFigure = (e, type, figure) => {
     if (e.target.parentElement.dataset.positionabs === 'false') {
+      const { x, y } = e.target.getBoundingClientRect();
+
       figureTypes[type].set(prev => [...prev, {
         figure,
         id: `${Math.random()}${type}`,
+        top: y,
+        left: x,
+        absolute: false,
       }]);
-    } else {
-      setClickedItem(e.target.id);
     }
+    setClickedItem(e.target.id);
   }
 
   const isFigureOutside = (e) => {
@@ -53,12 +104,38 @@ const FiguresMain = ({ canvasPosition }) => {
         (x + width) > canvasRight || (y + height) > canvasBottom))
   }
 
-  const handleDeleteKey = (e) => {
+  const setCordinates = (e, type) => {
+    figureTypes[type].set(figureTypes[type].take.map(element => {
+      if (element.id === e.target.id) {
+        const { x, y } = e.target.getBoundingClientRect();
+        return {
+          figure: element.figure,
+          id: element.id,
+          top: y,
+          left: x,
+          absolute: true
+        }
+      } else {
+        return element;
+      }
+    }))
+  }
+
+  const handleDeleteKey = useCallback((e) => {
     if (e.code === 'Delete' && clickedItem) {
       deleteFigure(clickedItem, 'circle');
       deleteFigure(clickedItem, 'square');
     }
-  }
+  }, [deleteFigure, clickedItem]);
+
+  useEffect(() => {
+    getDataFromLS();
+  }, []);
+
+  useEffect(() => {
+    setDataToLS();
+  }, [circlesArr, squaresArr, clickedItem])
+
 
   useEffect(() => {
     document.addEventListener('keydown', handleDeleteKey);
@@ -74,6 +151,8 @@ const FiguresMain = ({ canvasPosition }) => {
   const onCirlceMouseUp = (e) => {
     if (isFigureOutside(e)) {
       deleteFigure(e.target.id, 'circle');
+    } else {
+      setCordinates(e, 'circle');
     }
   }
 
@@ -84,6 +163,8 @@ const FiguresMain = ({ canvasPosition }) => {
   const onSquareMouseUp = (e) => {
     if (isFigureOutside(e)) {
       deleteFigure(e.target.id, 'square');
+    } else {
+      setCordinates(e, 'square');
     }
   }
 
@@ -92,11 +173,11 @@ const FiguresMain = ({ canvasPosition }) => {
       <h2>Figures</h2>
       {circlesArr.map(element => (
         <element.figure key={element.id} onMouseDown={onCircleMouseDown} clickedItem={clickedItem}
-          onMouseUp={onCirlceMouseUp} id={element.id} />)
+          onMouseUp={onCirlceMouseUp} id={element.id} left={element.left} top={element.top} absolute={element.absolute} />)
       )}
       {squaresArr.map(element => (
         <element.figure key={element.id} onMouseDown={onSquareMouseDown} clickedItem={clickedItem}
-          onMouseUp={onSquareMouseUp} id={element.id} />)
+          onMouseUp={onSquareMouseUp} id={element.id} left={element.left} top={element.top} absolute={element.absolute} />)
       )}
     </Main>
   )

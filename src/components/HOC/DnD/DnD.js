@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { DnDStyled } from './styles';
 import React from 'react';
 
-const DnD = ({ children }) => {
+const DnD = ({ children, topLS, leftLS, absoluteLS }) => {
   const [toMove, setToMove] = useState(false);
-  const [left, setLeft] = useState(0);
-  const [top, setTop] = useState(0);
+  const [left, setLeft] = useState(leftLS || 0);
+  const [top, setTop] = useState(topLS || 0);
   const [shiftLeft, setShiftLeft] = useState(0);
   const [shiftTop, setShiftTop] = useState(0);
   const [positionAbs, setPositionAbs] = useState(false);
@@ -31,20 +31,10 @@ const DnD = ({ children }) => {
     }
   }
 
-
-  // const childrenWithProps = React.Children.map(children, child => {
-  //   return (
-  //     React.cloneElement(child, {
-  //       id,
-  //     }
-  //     )
-  //   )
-  // })
-
   return (
     <DnDStyled onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove} left={left - shiftLeft}
-      top={top - shiftTop} absolute={positionAbs} data-positionabs={positionAbs}>
+      onMouseMove={handleMouseMove} left={left - shiftLeft} top={top - shiftTop}
+      absolute={positionAbs} data-positionabs={positionAbs} absoluteLS={absoluteLS} >
       {children}
     </DnDStyled>
   )
